@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tipos de línea del mapa MapRando</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    
+    :root {
+      --bg: #f8f9fa;
+      --bg-card: #ffffff;
+      --bg-section: #f0f4f8;
+      --text: #1a1a2e;
+      --text-muted: #6c757d;
+      --border: #dee2e6;
+      --border-card: #e3e8ef;
+      --accent: #2563eb;
+      --accent-trail: #dc2626;
+      --accent-trail-bg: #fff5f5;
+      --accent-trail-border: #fca5a5;
+      --featured-bg: #fffbeb;
+      --featured-border: #f59e0b;
+      --badge-featured: #d97706;
+      --badge-unknown: #6b7280;
+      --code-bg: #f1f5f9;
+      --code-text: #1e40af;
+      --tag-bg: #dbeafe;
+      --tag-text: #1e40af;
+      --resolution-bg: #e0f2fe;
+      --resolution-text: #0369a1;
+      --section-title: #1e3a5f;
+      --header-bg: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      --header-text: #ffffff;
+      --footer-bg: #1e3a5f;
+      --footer-text: #cbd5e1;
+      --unknown-stripe: repeating-linear-gradient(90deg, #adb5bd 0px, #adb5bd 8px, transparent 8px, transparent 16px);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --bg-card: #1e293b;
+        --bg-section: #162032;
+        --text: #e2e8f0;
+        --text-muted: #94a3b8;
+        --border: #334155;
+        --border-card: #334155;
+        --accent: #60a5fa;
+        --accent-trail-bg: #2d1515;
+        --accent-trail-border: #7f1d1d;
+        --featured-bg: #1c1708;
+        --featured-border: #b45309;
+        --code-bg: #1e3a5f;
+        --code-text: #93c5fd;
+        --tag-bg: #1e3a5f;
+        --tag-text: #93c5fd;
+        --resolution-bg: #0c2233;
+        --resolution-text: #7dd3fc;
+        --section-title: #93c5fd;
+        --unknown-stripe: repeating-linear-gradient(90deg, #475569 0px, #475569 8px, transparent 8px, transparent 16px);
+      }
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    
+    header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    
+    header h1 {
+      margin: 0 0 0.5rem;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+    
+    header p {
+      margin: 0;
+      opacity: 0.85;
+      font-size: 1rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    
+    /* TOC */
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2.5rem;
+    }
+    
+    .toc h2 {
+      margin: 0 0 1rem;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+    
+    .toc ol {
+      margin: 0;
+      padding-left: 1.5rem;
+      columns: 2;
+      column-gap: 2rem;
+    }
+    
+    @media (max-width: 600px) {
+      .toc ol { columns: 1; }
+    }
+    
+    .toc li {
+      margin-bottom: 0.4rem;
+    }
+    
+    .toc a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .toc a:hover {
+      text-decoration: underline;
+    }
+    
+    .toc-count {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    
+    /* Sections */
+    .section-block {
+      margin-bottom: 3rem;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--section-title);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .section-desc {
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+    
+    /* Cards grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+    }
+    
+    /* Card */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: box-shadow 0.15s ease;
+    }
+    
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .card-trail {
+      border-color: var(--accent-trail-border);
+      background: var(--accent-trail-bg);
+    }
+    
+    .card-featured {
+      border-color: var(--featured-border);
+      border-width: 2px;
+      background: var(--featured-bg);
+    }
+    
+    .card-unknown {
+      border-color: var(--border);
+      opacity: 0.8;
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-card);
+      background: var(--bg-section);
+      flex-wrap: wrap;
+    }
+    
+    .card-trail .card-header {
+      background: var(--accent-trail-bg);
+      border-bottom-color: var(--accent-trail-border);
+    }
+    
+    .type-hex {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    
+    .type-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      flex: 1;
+    }
+    
+    .badge-featured {
+      background: var(--badge-featured);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .badge-unknown {
+      background: var(--badge-unknown);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+    
+    /* Preview */
+    .preview-container {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-card);
+      background: #e8ecf0;
+      min-height: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .preview-container {
+        background: #0c1220;
+      }
+    }
+    
+    .preview-line {
+      display: block;
+      width: 100%;
+      min-height: 6px;
+      border-radius: 2px;
+    }
+    
+    .preview-unknown {
+      display: block;
+      width: 100%;
+      height: 8px;
+      background: var(--unknown-stripe);
+      border-radius: 2px;
+    }
+    
+    .notes {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-style: italic;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .notes { color: #94a3b8; }
+    }
+    
+    /* Card body */
+    .card-body {
+      padding: 0.75rem 1rem;
+    }
+    
+    .card-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      align-items: flex-start;
+    }
+    
+    .card-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .label {
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+      min-width: 60px;
+    }
+    
+    .value {
+      flex: 1;
+      word-break: break-word;
+    }
+    
+    .tags-value {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    /* Tags */
+    code.tag {
+      display: inline-block;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.78rem;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 1px;
+    }
+    
+    .no-tags {
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 0.85rem;
+    }
+    
+    .more-tags {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-style: italic;
+    }
+    
+    /* Resolution */
+    .resolution {
+      background: var(--resolution-bg);
+      color: var(--resolution-text);
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    
+    .res-desc {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+    
+    /* Color swatch */
+    .color-swatch {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.2);
+      vertical-align: middle;
+      margin-right: 2px;
+    }
+    
+    code {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 4px;
+      padding: 0.1rem 0.35rem;
+      font-size: 0.85em;
+      font-family: 'Courier New', Courier, monospace;
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    
+    footer h2 {
+      margin: 0 0 1rem;
+      font-size: 1.1rem;
+      color: #e2e8f0;
+    }
+    
+    footer p {
+      margin: 0 0 0.75rem;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    
+    footer code {
+      background: rgba(255,255,255,0.1);
+      color: #93c5fd;
+    }
+    
+    footer a {
+      color: #60a5fa;
+    }
+    
+    .stats-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+    }
+    
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .stat-num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+    
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-align: center;
+      margin-top: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Tipos de línea del mapa MapRando</h1>
+  <p>Referencia visual completa de todos los tipos de línea definidos en el estilo Garmin del proyecto.
+     Muestra colores, grosores, tags OSM y zoom de aparición.</p>
+</header>
+
+<div class="container">
+
+  <nav class="toc">
+    <h2>Tabla de contenidos</h2>
+    <ol>
+      <li><a href="#section-senderos">Senderos y caminos</a> <span class="toc-count">(24)</span></li>
+<li><a href="#section-carreteras">Carreteras y vías urbanas</a> <span class="toc-count">(10)</span></li>
+<li><a href="#section-ferroviario">Vías ferroviarias y transporte especial</a> <span class="toc-count">(8)</span></li>
+<li><a href="#section-hidrografia">Hidrografía</a> <span class="toc-count">(5)</span></li>
+<li><a href="#section-curvas">Curvas de nivel</a> <span class="toc-count">(3)</span></li>
+<li><a href="#section-limites">Límites y áreas protegidas</a> <span class="toc-count">(2)</span></li>
+<li><a href="#section-otras">Otras líneas</a> <span class="toc-count">(4)</span></li>
+<li><a href="#section-only-typ">Tipos en TYP sin uso en lines</a> <span class="toc-count">(4)</span></li>
+    </ol>
+  </nav>
+
+  <div class="stats-banner">
+    <div class="stat-item">
+      <span class="stat-num">55</span>
+      <span class="stat-label">tipos en<br>rando.txt</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">52</span>
+      <span class="stat-label">tipos en<br>lines</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">51</span>
+      <span class="stat-label">definidos<br>en ambos</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">1</span>
+      <span class="stat-label">solo en<br>lines</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">4</span>
+      <span class="stat-label">solo en<br>TYP</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">56</span>
+      <span class="stat-label">total tipos<br>únicos</span>
+    </div>
+  </div>
+
+  
+  <section id="section-senderos" class="section-block">
+    <h2 class="section-title">Senderos y caminos</h2>
+    <p class="section-desc">Senderos, caminos rurales, vías ferrata y rutas de senderismo. Esta sección es clave para personalizar el mapa de senderismo.</p>
+    <div class="cards-grid">
+      
+    <div class="card card-trail" id="type-0a">
+      <div class="card-header">
+        <span class="type-hex">0x0a</span>
+        
+        <span class="type-name">(sin nombre)</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #FFFFFF;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#FFFFFF"></span> XPM: <code>#FFFFFF</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=track</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22, 24</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-0e">
+      <div class="card-header">
+        <span class="type-hex">0x0e</span>
+        
+        <span class="type-name">Carril bici</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #AA00FF;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#AA00FF"></span> XPM: <code>#AA00FF</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=cycleway</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-0f">
+      <div class="card-header">
+        <span class="type-hex">0x0f</span>
+        
+        <span class="type-name">Escalera</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #333333;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#333333"></span> XPM: <code>#333333</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=steps</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10">
+      <div class="card-header">
+        <span class="type-hex">0x10</span>
+        
+        <span class="type-name">Sendero</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #000000;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#000000"></span> XPM: <code>#000000</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=path</code><br><code class="tag">highway=pedestrian</code> <code class="tag">area=no</code> <code class="tag">area!=*</code><br><code class="tag">highway=footway</code> <code class="tag">bicycle=dismount</code> <code class="tag">bicycle=no</code><br><code class="tag">highway=footway</code> <code class="tag">footway!=*</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-11">
+      <div class="card-header">
+        <span class="type-hex">0x11</span>
+        
+        <span class="type-name">Camino poco visible</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #000000;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000"></span> XPM: <code>#000000</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=path</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-12">
+      <div class="card-header">
+        <span class="type-hex">0x12</span>
+        
+        <span class="type-name">Camino agricola</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #000000;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#000000"></span> XPM: <code>#000000</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=footway</code><br><code class="tag">highway=track</code><br><code class="tag">highway=path</code> <code class="tag">foot=designated</code> <code class="tag">bicycle=designated</code><br><code class="tag">highway=pedestrian</code> <code class="tag">bicycle=yes</code> <code class="tag">surface~(asphalt</code> <code class="tag">area=no</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-13">
+      <div class="card-header">
+        <span class="type-hex">0x13</span>
+        
+        <span class="type-name">Carril bici de grava</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #101010;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#101010"></span> XPM: <code>#101010</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=cycleway</code> <code class="tag">foot=yes</code> <code class="tag">surface~(gravel</code> <code class="tag">area=no</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail card-featured" id="type-10f01">
+      <div class="card-header">
+        <span class="type-hex">0x10f01</span>
+        <span class="badge-featured">DESTACADO</span>
+        <span class="type-name">GR, GRP, PR y sendero balizado</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #F83000;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#F83000" title="Día: #F83000"></span> Día: <code>#F83000</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=*</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 20</span> <span class="res-desc">— visible a escala de ciudad/provincia</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail card-featured" id="type-10f02">
+      <div class="card-header">
+        <span class="type-hex">0x10f02</span>
+        <span class="badge-featured">DESTACADO</span>
+        <span class="type-name">Camino balizado (no GR/GRP)</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #0030D5;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#0030D5" title="Día: #0030D5"></span> Día: <code>#0030D5</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=*</code><br><code class="tag">highway=*</code> <code class="tag">trailblazed=yes</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail card-featured" id="type-10f04">
+      <div class="card-header">
+        <span class="type-hex">0x10f04</span>
+        <span class="badge-featured">DESTACADO</span>
+        <span class="type-name">Sendero BTT balizado</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #0030D5;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#0030D5" title="Día: #0030D5"></span> Día: <code>#0030D5</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=*</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10f07">
+      <div class="card-header">
+        <span class="type-hex">0x10f07</span>
+        
+        <span class="type-name">Base militar</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 4px; background-color: #FF0000;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#FF0000"></span> XPM: <code>#FF0000</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">landuse=military</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10f09">
+      <div class="card-header">
+        <span class="type-hex">0x10f09</span>
+        
+        <span class="type-name">Sendero prohibido</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #FF55AA;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#FF55AA"></span> XPM: <code>#FF55AA</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=path</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10f11">
+      <div class="card-header">
+        <span class="type-hex">0x10f11</span>
+        
+        <span class="type-name">Camino poco visible y prohibido</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #FF55AA;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#FF55AA"></span> XPM: <code>#FF55AA</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=path</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10f12">
+      <div class="card-header">
+        <span class="type-hex">0x10f12</span>
+        
+        <span class="type-name">Camino de explotacion privado</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #000000;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000"></span> XPM: <code>#000000</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=track</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22, 24</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10f13">
+      <div class="card-header">
+        <span class="type-hex">0x10f13</span>
+        
+        <span class="type-name">Camino de explotacion menor</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #000000;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000"></span> XPM: <code>#000000</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=track</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22, 24</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10f14">
+      <div class="card-header">
+        <span class="type-hex">0x10f14</span>
+        
+        <span class="type-name">Via ferrata</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #000000;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000"></span> XPM: <code>#000000</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=via_ferrata</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10f15">
+      <div class="card-header">
+        <span class="type-hex">0x10f15</span>
+        
+        <span class="type-name">Sendero prohibido</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #FF55AA;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#FF55AA"></span> XPM: <code>#FF55AA</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=footway</code><br><code class="tag">highway=track</code><br><code class="tag">highway=path</code> <code class="tag">foot=designated</code> <code class="tag">bicycle=designated</code><br><code class="tag">highway=cycleway</code> <code class="tag">foot=yes</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10f16">
+      <div class="card-header">
+        <span class="type-hex">0x10f16</span>
+        
+        <span class="type-name">(sin nombre)</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #FF55AA;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#FF55AA"></span> XPM: <code>#FF55AA</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=track</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card card-unknown" id="type-10f17">
+      <div class="card-header">
+        <span class="type-hex">0x10f17</span>
+        <span class="badge-unknown">no en TYP</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-unknown"></div>
+        <div class="notes">color desconocido — no definido en rando.txt</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=track</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10f18">
+      <div class="card-header">
+        <span class="type-hex">0x10f18</span>
+        
+        <span class="type-name">Acantilado</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #606060;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#606060"></span> XPM: <code>#606060</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">natural=cliff</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 23</span> <span class="res-desc">— visible en zoom alto</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-10f1b">
+      <div class="card-header">
+        <span class="type-hex">0x10f1b</span>
+        
+        <span class="type-name">Camino de servicio o residencial privado</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 12px; background-color: #FF55AA; border: 1px solid #555555; border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#FF55AA"></span> XPM: <code>#FF55AA</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=residential</code><br><code class="tag">highway=unclassified</code><br><code class="tag">highway=service</code><br><code class="tag">highway=living_street</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-11f01">
+      <div class="card-header">
+        <span class="type-hex">0x11f01</span>
+        
+        <span class="type-name">Camino no visible</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #000000;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000"></span> XPM: <code>#000000</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=path</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-11f02">
+      <div class="card-header">
+        <span class="type-hex">0x11f02</span>
+        
+        <span class="type-name">Camino no visible</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #FF55AA;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#FF55AA"></span> XPM: <code>#FF55AA</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=path</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card card-trail" id="type-11f06">
+      <div class="card-header">
+        <span class="type-hex">0x11f06</span>
+        
+        <span class="type-name">Cerca</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #838383;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#838383"></span> XPM: <code>#838383</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">barrier=fence</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="section-carreteras" class="section-block">
+    <h2 class="section-title">Carreteras y vías urbanas</h2>
+    <p class="section-desc">Red vial: autopistas, carreteras nacionales, secundarias, terciarias, calles residenciales.</p>
+    <div class="cards-grid">
+      
+    <div class="card" id="type-01">
+      <div class="card-header">
+        <span class="type-hex">0x01</span>
+        
+        <span class="type-name">Via rapida</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 16px; background-color: #FF5500; border: 1px solid #555555; border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#FF5500"></span> XPM: <code>#FF5500</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=trunk</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 20</span> <span class="res-desc">— visible a escala de ciudad/provincia</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-02">
+      <div class="card-header">
+        <span class="type-hex">0x02</span>
+        
+        <span class="type-name">Via principal</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 16px; background-color: #FFAA00; border: 1px solid #555555; border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#FFAA00"></span> XPM: <code>#FFAA00</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=primary</code> <code class="tag">oneway=yes</code><br><code class="tag">highway=primary_link</code> <code class="tag">oneway=yes</code><br><code class="tag">highway=trunk_link</code><br><code class="tag">highway=primary</code><br><code class="tag">highway=primary_link</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 20</span> <span class="res-desc">— visible a escala de ciudad/provincia</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-03">
+      <div class="card-header">
+        <span class="type-hex">0x03</span>
+        
+        <span class="type-name">Via secundaria</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 16px; background-color: #FFFF00; border: 1px solid #555555; border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#FFFF00"></span> XPM: <code>#FFFF00</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=secondary</code><br><code class="tag">highway=secondary_link</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 21</span> <span class="res-desc">— visible a escala de ciudad/provincia</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-04">
+      <div class="card-header">
+        <span class="type-hex">0x04</span>
+        
+        <span class="type-name">Via terciaria</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 15px; background-color: #FFFFFF; border: 1px solid #555555; border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#FFFFFF"></span> XPM: <code>#FFFFFF</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=tertiary</code><br><code class="tag">highway=tertiary_link</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-06">
+      <div class="card-header">
+        <span class="type-hex">0x06</span>
+        
+        <span class="type-name">Carretera de servicio o residencial</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 12px; background-color: #FFFFFF; border: 1px solid #555555; border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#FFFFFF"></span> XPM: <code>#FFFFFF</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=residential</code><br><code class="tag">highway=unclassified</code><br><code class="tag">highway=service</code><br><code class="tag">highway=living_street</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-09">
+      <div class="card-header">
+        <span class="type-hex">0x09</span>
+        
+        <span class="type-name">Autopista</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 16px; background-color: #FF5500; border: 2px solid #555555; border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#FF5500"></span> XPM: <code>#FF5500</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=motorway</code><br><code class="tag">highway=motorway_link</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 17, 20</span> <span class="res-desc">— visible desde muy lejos (vista general, mapa global)</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-0d">
+      <div class="card-header">
+        <span class="type-hex">0x0d</span>
+        
+        <span class="type-name">Tunel</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #555555;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#555555"></span> XPM: <code>#555555</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=*</code> <code class="tag">tunnel=yes</code><br><code class="tag">highway=motorway</code> <code class="tag">tunnel=yes</code><br><code class="tag">highway=motorway_link</code> <code class="tag">tunnel=yes</code><br><code class="tag">highway=trunk</code> <code class="tag">tunnel=yes</code><br><code class="tag">highway=trunk_link</code> <code class="tag">tunnel=yes</code><br><span class="more-tags">+8 más</span></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e06">
+      <div class="card-header">
+        <span class="type-hex">0x10e06</span>
+        
+        <span class="type-name">Via en tunel</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #A0A4A0;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#A0A4A0"></span> XPM: <code>#A0A4A0</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">railway=rail</code> <code class="tag">tunnel=yes</code><br><code class="tag">railway=abandoned</code> <code class="tag">tunnel=yes</code><br><code class="tag">railway=tram</code> <code class="tag">tunnel=yes</code><br><code class="tag">railway=funicular</code> <code class="tag">tunnel=yes</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e0b">
+      <div class="card-header">
+        <span class="type-hex">0x10e0b</span>
+        
+        <span class="type-name">Via en construccion en tunel</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #C0C4C0;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#C0C4C0"></span> XPM: <code>#C0C4C0</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">railway=construction</code> <code class="tag">tunnel=yes</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e1c">
+      <div class="card-header">
+        <span class="type-hex">0x10e1c</span>
+        
+        <span class="type-name">Carretera en construccion</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #555555;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#555555"></span> XPM: <code>#555555</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">highway=*</code> <code class="tag">construction=*</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="section-ferroviario" class="section-block">
+    <h2 class="section-title">Vías ferroviarias y transporte especial</h2>
+    <p class="section-desc">Ferrocarriles, tranvías, funiculares, teleféricos y cables transportadores.</p>
+    <div class="cards-grid">
+      
+    <div class="card" id="type-1b">
+      <div class="card-header">
+        <span class="type-hex">0x1b</span>
+        
+        <span class="type-name">Ferri</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #5080A0;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#5080A0"></span> XPM: <code>#5080A0</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">route=ferry</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e00">
+      <div class="card-header">
+        <span class="type-hex">0x10e00</span>
+        
+        <span class="type-name">Cable transportador</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #404040;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#404040"></span> XPM: <code>#404040</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">man_made=goods_conveyor</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e01">
+      <div class="card-header">
+        <span class="type-hex">0x10e01</span>
+        
+        <span class="type-name">Teleferico</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #505050;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#505050"></span> XPM: <code>#505050</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">aerialway=*</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e02">
+      <div class="card-header">
+        <span class="type-hex">0x10e02</span>
+        
+        <span class="type-name">Via ferrea</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #F8FCF8;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#F8FCF8"></span> XPM: <code>#F8FCF8</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">railway=rail</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code> <code class="tag">tunnel=yes</code><br><code class="tag">railway=light_rail</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code> <code class="tag">tunnel=yes</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 20, 22</span> <span class="res-desc">— visible a escala de ciudad/provincia</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e03">
+      <div class="card-header">
+        <span class="type-hex">0x10e03</span>
+        
+        <span class="type-name">Via sin explotar</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #F8FCF8;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#F8FCF8"></span> XPM: <code>#F8FCF8</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">railway=abandoned</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code> <code class="tag">tunnel=yes</code><br><code class="tag">railway=tram</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code> <code class="tag">tunnel=yes</code><br><code class="tag">railway=funicular</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code> <code class="tag">tunnel=yes</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 23, 24</span> <span class="res-desc">— visible en zoom alto</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e04">
+      <div class="card-header">
+        <span class="type-hex">0x10e04</span>
+        
+        <span class="type-name">Tranvia</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #F8FCF8;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#F8FCF8"></span> XPM: <code>#F8FCF8</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><span class="no-tags">sin reglas en lines</span></span>
+        </div>
+        
+      </div>
+    </div>
+    <div class="card" id="type-10e05">
+      <div class="card-header">
+        <span class="type-hex">0x10e05</span>
+        
+        <span class="type-name">Funicular</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #303030;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#303030"></span> XPM: <code>#303030</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><span class="no-tags">sin reglas en lines</span></span>
+        </div>
+        
+      </div>
+    </div>
+    <div class="card" id="type-10e0a">
+      <div class="card-header">
+        <span class="type-hex">0x10e0a</span>
+        
+        <span class="type-name">Via en construccion</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #F8FCF8;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#F8FCF8"></span> XPM: <code>#F8FCF8</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">railway=construction</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code> <code class="tag">tunnel=yes</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="section-hidrografia" class="section-block">
+    <h2 class="section-title">Hidrografía</h2>
+    <p class="section-desc">Ríos, arroyos, canales, cascadas y cursos de agua.</p>
+    <div class="cards-grid">
+      
+    <div class="card" id="type-18">
+      <div class="card-header">
+        <span class="type-hex">0x18</span>
+        
+        <span class="type-name">Arroyo</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 6px; background-color: #55AAFF;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#55AAFF"></span> XPM: <code>#55AAFF</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">waterway=stream</code> <code class="tag">intermittent=no</code> <code class="tag">intermittent!=*</code> <code class="tag">tunnel=no</code><br><code class="tag">waterway=riverbank</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code><br><code class="tag">waterway=river</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code><br><code class="tag">waterway=canal</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code><br><code class="tag">waterway=drain</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 20, 22, 23</span> <span class="res-desc">— visible a escala de ciudad/provincia</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-1f">
+      <div class="card-header">
+        <span class="type-hex">0x1f</span>
+        
+        <span class="type-name">(sin nombre)</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #FFFFFF;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#FFFFFF"></span> XPM: <code>#FFFFFF</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">waterway=river</code> <code class="tag">intermittent=no</code> <code class="tag">intermittent!=*</code> <code class="tag">tunnel=no</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 22</span> <span class="res-desc">— visible a escala local</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-26">
+      <div class="card-header">
+        <span class="type-hex">0x26</span>
+        
+        <span class="type-name">Arroyo intermitente</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #55AAFF;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#55AAFF"></span> XPM: <code>#55AAFF</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">waterway=stream</code> <code class="tag">intermittent=yes</code> <code class="tag">tunnel=no</code> <code class="tag">tunnel!=*</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 23</span> <span class="res-desc">— visible en zoom alto</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e0d">
+      <div class="card-header">
+        <span class="type-hex">0x10e0d</span>
+        
+        <span class="type-name">Cascada</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #107CE0;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#107CE0" title="Día: #107CE0"></span> Día: <code>#107CE0</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">waterway=waterfall</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e10">
+      <div class="card-header">
+        <span class="type-hex">0x10e10</span>
+        
+        <span class="type-name">Curso de agua subterraneo</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #98CCF8;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#98CCF8"></span> XPM: <code>#98CCF8</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">waterway=*</code> <code class="tag">tunnel=yes</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="section-curvas" class="section-block">
+    <h2 class="section-title">Curvas de nivel</h2>
+    <p class="section-desc">Líneas de nivel de altitud (contornos topográficos).</p>
+    <div class="cards-grid">
+      
+    <div class="card" id="type-20">
+      <div class="card-header">
+        <span class="type-hex">0x20</span>
+        
+        <span class="type-name">Contorno</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 4px; background-color: #785C18;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#785C18" title="Día: #785C18"></span> Día: <code>#785C18</code> &nbsp; <span class="color-swatch" style="background:#906818" title="Noche: #906818"></span> Noche: <code>#906818</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">contour=elevation</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-21">
+      <div class="card-header">
+        <span class="type-hex">0x21</span>
+        
+        <span class="type-name">Contorno</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 4px; background-color: #705410;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#705410" title="Día: #705410"></span> Día: <code>#705410</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><span class="no-tags">sin reglas en lines</span></span>
+        </div>
+        
+      </div>
+    </div>
+    <div class="card" id="type-22">
+      <div class="card-header">
+        <span class="type-hex">0x22</span>
+        
+        <span class="type-name">Contorno</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 4px; background-color: #705410;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#705410" title="Día: #705410"></span> Día: <code>#705410</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">contour=elevation</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 23, 24</span> <span class="res-desc">— visible en zoom alto</span></span></div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="section-limites" class="section-block">
+    <h2 class="section-title">Límites y áreas protegidas</h2>
+    <p class="section-desc">Parques nacionales, reservas naturales y zonas militares.</p>
+    <div class="cards-grid">
+      
+    <div class="card" id="type-10e1e">
+      <div class="card-header">
+        <span class="type-hex">0x10e1e</span>
+        
+        <span class="type-name">Parque nacional</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #00A400;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#00A400" title="Día: #00A400"></span> Día: <code>#00A400</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">boundary=national_park</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 20</span> <span class="res-desc">— visible a escala de ciudad/provincia</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e1f">
+      <div class="card-header">
+        <span class="type-hex">0x10e1f</span>
+        
+        <span class="type-name">Reserva nacional</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #00A400;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#00A400" title="Día: #00A400"></span> Día: <code>#00A400</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">leisure=nature_reserve</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 21</span> <span class="res-desc">— visible a escala de ciudad/provincia</span></span></div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="section-otras" class="section-block">
+    <h2 class="section-title">Otras líneas</h2>
+    <p class="section-desc">Líneas eléctricas, muros, vallas, obras, acantilados y más.</p>
+    <div class="cards-grid">
+      
+    <div class="card" id="type-29">
+      <div class="card-header">
+        <span class="type-hex">0x29</span>
+        
+        <span class="type-name">Linea electrica</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 4px; background-color: #808080;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#808080"></span> XPM: <code>#808080</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">man_made=pipeline</code> <code class="tag">location!=underground</code> <code class="tag">location!=*</code><br><code class="tag">power=line</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e13">
+      <div class="card-header">
+        <span class="type-hex">0x10e13</span>
+        
+        <span class="type-name">Muro antirruido</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #C0C4C0;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#000000"></span> XPM: <code>#000000</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">wall=noise_barrier</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10e19">
+      <div class="card-header">
+        <span class="type-hex">0x10e19</span>
+        
+        <span class="type-name">Talud</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #A06850;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#A06850" title="Día: #A06850"></span> Día: <code>#A06850</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><code class="tag">embankment=yes</code></span>
+        </div>
+        <div class="card-row"><span class="label">Zoom:</span><span class="value"><span class="resolution">resolution 24</span> <span class="res-desc">— solo visible en zoom máximo</span></span></div>
+      </div>
+    </div>
+    <div class="card" id="type-10f1f">
+      <div class="card-header">
+        <span class="type-hex">0x10f1f</span>
+        
+        <span class="type-name">(sin nombre)</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #FFFFFF;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#FFFFFF"></span> XPM: <code>#FFFFFF</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><span class="no-tags">sin reglas en lines</span></span>
+        </div>
+        
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="section-only-typ" class="section-block">
+    <h2 class="section-title">Tipos en el TYP sin uso en lines</h2>
+    <p class="section-desc">Estos tipos están definidos visualmente en <code>style/rando.txt</code> pero no aparecen en las reglas de <code>style/rando/lines</code>. Pueden ser tipos heredados, no usados, o usados en otros archivos de reglas.</p>
+    <div class="cards-grid">
+      
+    <div class="card" id="type-21">
+      <div class="card-header">
+        <span class="type-hex">0x21</span>
+        
+        <span class="type-name">Contorno</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 4px; background-color: #705410;  border-radius: 2px;"></div>
+        
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#705410" title="Día: #705410"></span> Día: <code>#705410</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><span class="no-tags">sin reglas en lines</span></span>
+        </div>
+        
+      </div>
+    </div>
+    <div class="card" id="type-10e04">
+      <div class="card-header">
+        <span class="type-hex">0x10e04</span>
+        
+        <span class="type-name">Tranvia</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #F8FCF8;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#F8FCF8"></span> XPM: <code>#F8FCF8</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><span class="no-tags">sin reglas en lines</span></span>
+        </div>
+        
+      </div>
+    </div>
+    <div class="card" id="type-10e05">
+      <div class="card-header">
+        <span class="type-hex">0x10e05</span>
+        
+        <span class="type-name">Funicular</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #303030;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado - color base del patrón</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#000000" title="Día: #000000"></span> Día: <code>#000000</code> &nbsp; <span class="color-swatch" style="background:#303030"></span> XPM: <code>#303030</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><span class="no-tags">sin reglas en lines</span></span>
+        </div>
+        
+      </div>
+    </div>
+    <div class="card" id="type-10f1f">
+      <div class="card-header">
+        <span class="type-hex">0x10f1f</span>
+        
+        <span class="type-name">(sin nombre)</span>
+      </div>
+      <div class="preview-container">
+        <div class="preview-line" style="height: 9px; background-color: #FFFFFF;  border-radius: 2px;"></div>
+        <div class="notes">patrón texturado</div>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Color:</span>
+          <span class="value"><span class="color-swatch" style="background:#FFFFFF"></span> XPM: <code>#FFFFFF</code></span>
+        </div>
+        <div class="card-row">
+          <span class="label">Tags OSM:</span>
+          <span class="value tags-value"><span class="no-tags">sin reglas en lines</span></span>
+        </div>
+        
+      </div>
+    </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <h2>Cómo personalizar los colores</h2>
+  <p>Los colores se definen en <code>style/rando.txt</code> (encoding CP1252/Windows-1252).
+     Cada bloque <code>[_line]</code> contiene los campos <code>DaycustomColor</code> y
+     <code>NightcustomColor</code> con el color en formato <code>#RRGGBB</code>.</p>
+  <p>Para cambiar el color de un tipo (ejemplo: hacer el GR naranja en vez de rojo):</p>
+  <p><code>DaycustomColor:#FF6600</code><br>
+     <code>NightcustomColor:#FF6600</code></p>
+  <p>Tras modificar el archivo, recompila el TYP con la herramienta adecuada (e.g. <code>mkgmap</code>
+     o el script <code>traducir_typ.py</code>) y regenera el mapa con <code>crear_mapa.sh</code>.</p>
+  <p style="margin-top:1rem; font-size:0.8rem; opacity:0.6;">
+    Generado el 2026-05-15 a partir de style/rando.txt y style/rando/lines
+  </p>
+</footer>
+
+</body>
+</html>
