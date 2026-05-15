@@ -1,0 +1,29 @@
+# Credenciales NASA EarthData (¡NUNCA commitear!)
+password.txt
+
+# Herramientas descargadas por download_require.sh
+mkgmap/
+splitter/
+sea.zip
+
+# Datos generados durante el build
+carte_*/
+dem/
+salida/
+logs/
+
+# Caché de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema
+.DS_Store
+Thumbs.db
