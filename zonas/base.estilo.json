@@ -1,0 +1,11 @@
+{
+  "zona": "base",
+  "generado": "2026-05-16",
+  "descripcion": "Personalizacion del estilo base: colores de senderos alineados con la senalizacion oficial espanola/francesa (GR blanco-rojo, PR blanco-amarillo, BTT naranja). Aplicado directamente sobre style/rando.txt; cualquier zona nueva hereda estos colores.",
+  "cambios": {
+    "0x10f01": {"day": "#E2231A", "night": "#E2231A"},
+    "0x10f02": {"day": "#F2C200", "night": "#F2C200"},
+    "0x10f04": {"day": "#E87E04", "night": "#E87E04"},
+    "0x10": {"day": "#7A4F1D", "night": "#7A4F1D"}
+  }
+}

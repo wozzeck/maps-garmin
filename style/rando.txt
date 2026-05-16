@@ -1860,8 +1860,8 @@ String1=0x01,Sendero
 ExtendedLabels=Y
 FontStyle=NoLabel (invisible)
 CustomColor=DayAndNight
-DaycustomColor:#000000
-NightcustomColor:#000000
+DaycustomColor:#7A4F1D
+NightcustomColor:#7A4F1D
 ContourColor=No
 [end]
 
@@ -2424,8 +2424,8 @@ String1=0x01,GR, GRP, PR y sendero balizado
 ExtendedLabels=Y
 FontStyle=NormalFont
 CustomColor=DayAndNight
-DaycustomColor:#F83000
-NightcustomColor:#F83000
+DaycustomColor:#E2231A
+NightcustomColor:#E2231A
 ContourColor=No
 [end]
 
@@ -2454,8 +2454,8 @@ String1=0x01,Camino balizado (no GR/GRP)
 ExtendedLabels=Y
 FontStyle=Default
 CustomColor=DayAndNight
-DaycustomColor:#0030D5
-NightcustomColor:#0030D5
+DaycustomColor:#F2C200
+NightcustomColor:#F2C200
 ContourColor=No
 [end]
 
@@ -2484,8 +2484,8 @@ String1=0x01,Sendero BTT balizado
 ExtendedLabels=Y
 FontStyle=Default
 CustomColor=DayAndNight
-DaycustomColor:#0030D5
-NightcustomColor:#0030D5
+DaycustomColor:#E87E04
+NightcustomColor:#E87E04
 ContourColor=No
 [end]
 
