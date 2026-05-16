@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor de Mapas Garmin</title>
+
+  <!-- Leaflet 1.9.x -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+  <!-- Leaflet-Geoman -->
+  <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" crossorigin=""/>
+  <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js" crossorigin=""></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <h1>Editor de Mapas Garmin</h1>
+    <span class="subtitle">Configura zona, estilo y descarga los ficheros de configuracion</span>
+  </header>
+
+  <nav class="tabs">
+    <button class="active" data-tab="zona">1. Zona</button>
+    <button data-tab="estilo">2. Estilo</button>
+    <button data-tab="generar">3. Generar</button>
+  </nav>
+
+  <div id="error-global"></div>
+
+  <!-- ================================
+       TAB 1: ZONA
+       ================================ -->
+  <div id="tab-zona" class="tab-content active">
+    <div class="zona-layout">
+
+      <div id="mapa-container">
+        <div id="map"></div>
+      </div>
+
+      <div class="zona-panel">
+        <div class="zona-panel-scroll">
+
+          <!-- Datos de zona -->
+          <div class="field-group">
+            <h3>Datos de la zona</h3>
+
+            <div class="field-row">
+              <label for="nombre-zona">Nombre de la zona</label>
+              <input type="text" id="nombre-zona" placeholder="Ej: Pirineos Centrales" maxlength="60">
+              <span class="hint">Id generado: <span class="id-preview" id="id-preview">—</span></span>
+            </div>
+
+            <div class="field-row">
+              <label for="mapid-base">MAPID_BASE (100-999)</label>
+              <input type="number" id="mapid-base" min="100" max="999" placeholder="ej: 200">
+              <span id="mapid-warn" class="warn-text" style="display:none"></span>
+              <span class="hint">IDs reservados: 889 (pirineos), 890</span>
+            </div>
+
+            <div class="field-row">
+              <label for="ram-java">RAM Java</label>
+              <select id="ram-java">
+                <option value="2048m">2048m (2 GB)</option>
+                <option value="4096m">4096m (4 GB)</option>
+                <option value="6144m" selected>6144m (6 GB)</option>
+                <option value="8192m">8192m (8 GB)</option>
+                <option value="12288m">12288m (12 GB)</option>
+              </select>
+            </div>
+
+            <div class="field-row">
+              <label for="fuentes-hgt">FUENTES_HGT (separadas por coma)</label>
+              <input type="text" id="fuentes-hgt" value="sonn1,view1,alos1,srtm1">
+            </div>
+          </div>
+
+          <!-- Info bbox -->
+          <div class="info-box" id="info-bbox">
+            <h3>Delimitacion del poligono</h3>
+            <div class="bbox-values" id="bbox-display">
+              Dibuja un poligono en el mapa para ver el bounding box.
+            </div>
+          </div>
+
+          <!-- Extractos -->
+          <div class="field-group">
+            <h3>Extractos OSM</h3>
+            <div class="extractos-filter">
+              <label for="filtro-padre">Filtrar:</label>
+              <select id="filtro-padre">
+                <option value="default">Espana + Francia + Andorra</option>
+                <option value="spain">Solo Espana</option>
+                <option value="france">Solo Francia</option>
+                <option value="europe">Todos Europa</option>
+                <option value="all">Todos</option>
+              </select>
+            </div>
+            <div class="hint">
+              Seleccionados: <span id="num-extractos" class="count-badge">0</span>
+            </div>
+            <div class="extractos-lista" id="extractos-lista"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================
+       TAB 2: ESTILO
+       ================================ -->
+  <div id="tab-estilo" class="tab-content">
+    <div class="estilo-toolbar">
+      <span>Cambios de color:</span>
+      <span class="cambios-badge" id="cambios-badge">0</span>
+      <button class="btn-secondary" id="btn-restaurar-todo">Restaurar todos los colores</button>
+    </div>
+    <div class="estilo-scroll" id="estilo-scroll">
+      <div style="text-align:center; padding: 40px; color: var(--fg3);">Cargando estilo...</div>
+    </div>
+  </div>
+
+  <!-- ================================
+       TAB 3: GENERAR
+       ================================ -->
+  <div id="tab-generar" class="tab-content">
+    <div class="generar-scroll">
+
+      <div class="resumen-card">
+        <h2>Resumen de configuracion</h2>
+        <dl class="resumen-grid">
+          <dt>Zona (id):</dt>
+          <dd id="res-id">—</dd>
+          <dt>Nombre:</dt>
+          <dd id="res-nombre">—</dd>
+          <dt>MAPID_BASE:</dt>
+          <dd id="res-mapid">—</dd>
+          <dt>RAM Java:</dt>
+          <dd id="res-ram">—</dd>
+          <dt>BBOX Sur:</dt>
+          <dd id="res-sur">—</dd>
+          <dt>BBOX Norte:</dt>
+          <dd id="res-norte">—</dd>
+          <dt>BBOX Oeste:</dt>
+          <dd id="res-oeste">—</dd>
+          <dt>BBOX Este:</dt>
+          <dd id="res-este">—</dd>
+          <dt>Fuentes HGT:</dt>
+          <dd id="res-hgt">—</dd>
+          <dt>Cambios de estilo:</dt>
+          <dd id="res-cambios">0 tipos modificados</dd>
+        </dl>
+      </div>
+
+      <div class="resumen-card">
+        <h2>Extractos OSM seleccionados (<span id="res-num-ext">0</span>)</h2>
+        <div class="resumen-lista" id="res-extractos-lista">
+          <span style="color: var(--fg3); font-size: 0.8rem;">Ninguno seleccionado.</span>
+        </div>
+      </div>
+
+      <div id="alerta-generar" class="alerta" style="display:none"></div>
+
+      <button class="btn-primary" id="btn-descargar">Descargar configuracion (3 ficheros)</button>
+
+      <div class="instrucciones-card">
+        <h3>Instrucciones de uso</h3>
+        <ol>
+          <li>Descarga los 3 ficheros generados.</li>
+          <li>Copia <code>&lt;id&gt;.conf</code> y <code>&lt;id&gt;.poly</code> a la carpeta <code>zonas/</code> del repositorio.</li>
+          <li>Copia <code>&lt;id&gt;.estilo.json</code> a la carpeta <code>zonas/</code>.</li>
+          <li>Ejecuta: <code id="instruccion-cmd">bash crear_mapa.sh &lt;id&gt;</code></li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

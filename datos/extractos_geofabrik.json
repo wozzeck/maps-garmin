@@ -1,0 +1,774 @@
+{
+  "fuente": "https://download.geofabrik.de/index-v1.json",
+  "generado": "2026-05-16",
+  "total": 59,
+  "extractos": [
+    {
+      "id": "canary-islands",
+      "nombre": "Canary Islands",
+      "nombre_es": "Islas Canarias",
+      "padre": "africa",
+      "url": "https://download.geofabrik.de/africa/canary-islands-latest.osm.pbf",
+      "bbox": {
+        "oeste": -18.92352,
+        "sur": 26.36117,
+        "este": -12.47875,
+        "norte": 30.25648
+      }
+    },
+    {
+      "id": "germany",
+      "nombre": "Germany",
+      "nombre_es": "Alemania",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/germany-latest.osm.pbf",
+      "bbox": {
+        "oeste": 5.86442,
+        "sur": 47.26543,
+        "este": 15.05078,
+        "norte": 55.14777
+      }
+    },
+    {
+      "id": "andorra",
+      "nombre": "Andorra",
+      "nombre_es": "Andorra",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/andorra-latest.osm.pbf",
+      "bbox": {
+        "oeste": 1.41237,
+        "sur": 42.4276,
+        "este": 1.78748,
+        "norte": 42.65717
+      }
+    },
+    {
+      "id": "belgium",
+      "nombre": "Belgium",
+      "nombre_es": "Bélgica",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/belgium-latest.osm.pbf",
+      "bbox": {
+        "oeste": 2.34072,
+        "sur": 49.49489,
+        "este": 6.41026,
+        "norte": 51.59839
+      }
+    },
+    {
+      "id": "spain",
+      "nombre": "Spain",
+      "nombre_es": "España",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/spain-latest.osm.pbf",
+      "bbox": {
+        "oeste": -9.77901,
+        "sur": 35.26393,
+        "este": 5.09853,
+        "norte": 44.14855
+      }
+    },
+    {
+      "id": "france",
+      "nombre": "France",
+      "nombre_es": "Francia",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/france-latest.osm.pbf",
+      "bbox": {
+        "oeste": -6.93721,
+        "sur": 41.23866,
+        "este": 9.9,
+        "norte": 51.4288
+      }
+    },
+    {
+      "id": "great-britain",
+      "nombre": "Great Britain",
+      "nombre_es": "Gran Bretaña",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/great-britain-latest.osm.pbf",
+      "bbox": {
+        "oeste": -14.9907,
+        "sur": 49.523,
+        "este": 2.51367,
+        "norte": 61.13564
+      }
+    },
+    {
+      "id": "ireland-and-northern-ireland",
+      "nombre": "Ireland and Northern Ireland",
+      "nombre_es": "Irlanda",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/ireland-and-northern-ireland-latest.osm.pbf",
+      "bbox": {
+        "oeste": -14.40224,
+        "sur": 49.60002,
+        "este": -5.05926,
+        "norte": 56.86553
+      }
+    },
+    {
+      "id": "italy",
+      "nombre": "Italy",
+      "nombre_es": "Italia",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/italy-latest.osm.pbf",
+      "bbox": {
+        "oeste": 6.6027,
+        "sur": 35.07638,
+        "este": 19.12499,
+        "norte": 47.10005
+      }
+    },
+    {
+      "id": "luxembourg",
+      "nombre": "Luxembourg",
+      "nombre_es": "Luxemburgo",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/luxembourg-latest.osm.pbf",
+      "bbox": {
+        "oeste": 5.73303,
+        "sur": 49.44553,
+        "este": 6.53225,
+        "norte": 50.18496
+      }
+    },
+    {
+      "id": "monaco",
+      "nombre": "Monaco",
+      "nombre_es": "Mónaco",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/monaco-latest.osm.pbf",
+      "bbox": {
+        "oeste": 7.40858,
+        "sur": 43.48382,
+        "este": 7.59567,
+        "norte": 43.75293
+      }
+    },
+    {
+      "id": "netherlands",
+      "nombre": "Netherlands",
+      "nombre_es": "Países Bajos",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/netherlands-latest.osm.pbf",
+      "bbox": {
+        "oeste": 2.93609,
+        "sur": 50.74753,
+        "este": 7.23046,
+        "norte": 54.01786
+      }
+    },
+    {
+      "id": "portugal",
+      "nombre": "Portugal",
+      "nombre_es": "Portugal",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/portugal-latest.osm.pbf",
+      "bbox": {
+        "oeste": -31.6,
+        "sur": 32.0,
+        "este": -6.17951,
+        "norte": 42.1639
+      }
+    },
+    {
+      "id": "switzerland",
+      "nombre": "Switzerland",
+      "nombre_es": "Suiza",
+      "padre": "europe",
+      "url": "https://download.geofabrik.de/europe/switzerland-latest.osm.pbf",
+      "bbox": {
+        "oeste": 5.95442,
+        "sur": 45.81642,
+        "este": 10.49584,
+        "norte": 47.81126
+      }
+    },
+    {
+      "id": "alsace",
+      "nombre": "Alsace",
+      "nombre_es": "Alsace",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/alsace-latest.osm.pbf",
+      "bbox": {
+        "oeste": 6.83892,
+        "sur": 47.41798,
+        "este": 8.23546,
+        "norte": 49.07898
+      }
+    },
+    {
+      "id": "aquitaine",
+      "nombre": "Aquitaine",
+      "nombre_es": "Aquitaine",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/aquitaine-latest.osm.pbf",
+      "bbox": {
+        "oeste": -1.84277,
+        "sur": 42.77334,
+        "este": 1.45058,
+        "norte": 45.71724
+      }
+    },
+    {
+      "id": "auvergne",
+      "nombre": "Auvergne",
+      "nombre_es": "Auvergne",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/auvergne-latest.osm.pbf",
+      "bbox": {
+        "oeste": 2.06052,
+        "sur": 44.6146,
+        "este": 4.49291,
+        "norte": 46.80668
+      }
+    },
+    {
+      "id": "basse-normandie",
+      "nombre": "Basse-Normandie",
+      "nombre_es": "Basse-Normandie",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/basse-normandie-latest.osm.pbf",
+      "bbox": {
+        "oeste": -2.08753,
+        "sur": 48.17802,
+        "este": 0.97907,
+        "norte": 49.88523
+      }
+    },
+    {
+      "id": "bourgogne",
+      "nombre": "Bourgogne",
+      "nombre_es": "Bourgogne",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/bourgogne-latest.osm.pbf",
+      "bbox": {
+        "oeste": 2.84328,
+        "sur": 46.15484,
+        "este": 5.51997,
+        "norte": 48.40136
+      }
+    },
+    {
+      "id": "bretagne",
+      "nombre": "Bretagne",
+      "nombre_es": "Bretagne",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/bretagne-latest.osm.pbf",
+      "bbox": {
+        "oeste": -5.84885,
+        "sur": 47.07722,
+        "este": -1.01454,
+        "norte": 49.40025
+      }
+    },
+    {
+      "id": "centre",
+      "nombre": "Centre",
+      "nombre_es": "Centre",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/centre-latest.osm.pbf",
+      "bbox": {
+        "oeste": 0.05154,
+        "sur": 46.34591,
+        "este": 3.12993,
+        "norte": 48.9423
+      }
+    },
+    {
+      "id": "champagne-ardenne",
+      "nombre": "Champagne Ardenne",
+      "nombre_es": "Champagne Ardenne",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/champagne-ardenne-latest.osm.pbf",
+      "bbox": {
+        "oeste": 3.38242,
+        "sur": 47.57553,
+        "este": 5.89218,
+        "norte": 50.17007
+      }
+    },
+    {
+      "id": "corse",
+      "nombre": "Corse",
+      "nombre_es": "Corse",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/corse-latest.osm.pbf",
+      "bbox": {
+        "oeste": 8.31788,
+        "sur": 41.31103,
+        "este": 9.75124,
+        "norte": 43.16589
+      }
+    },
+    {
+      "id": "franche-comte",
+      "nombre": "Franche Comte",
+      "nombre_es": "Franche Comte",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/franche-comte-latest.osm.pbf",
+      "bbox": {
+        "oeste": 5.25076,
+        "sur": 46.25975,
+        "este": 7.14439,
+        "norte": 48.02537
+      }
+    },
+    {
+      "id": "guadeloupe",
+      "nombre": "Guadeloupe",
+      "nombre_es": "Guadeloupe",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/guadeloupe-latest.osm.pbf",
+      "bbox": {
+        "oeste": -62.15241,
+        "sur": 15.49074,
+        "este": -60.60471,
+        "norte": 16.82426
+      }
+    },
+    {
+      "id": "guyane",
+      "nombre": "Guyane",
+      "nombre_es": "Guyane",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/guyane-latest.osm.pbf",
+      "bbox": {
+        "oeste": -54.62299,
+        "sur": 2.09312,
+        "este": -50.8667,
+        "norte": 6.37029
+      }
+    },
+    {
+      "id": "haute-normandie",
+      "nombre": "Haute-Normandie",
+      "nombre_es": "Haute-Normandie",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/haute-normandie-latest.osm.pbf",
+      "bbox": {
+        "oeste": 0.00948,
+        "sur": 48.66574,
+        "este": 1.80396,
+        "norte": 50.08769
+      }
+    },
+    {
+      "id": "ile-de-france",
+      "nombre": "Ile-de-France",
+      "nombre_es": "Ile-de-France",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/ile-de-france-latest.osm.pbf",
+      "bbox": {
+        "oeste": 1.4451,
+        "sur": 48.11918,
+        "este": 3.56041,
+        "norte": 49.24271
+      }
+    },
+    {
+      "id": "languedoc-roussillon",
+      "nombre": "Languedoc-Roussillon",
+      "nombre_es": "Languedoc-Roussillon",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/languedoc-roussillon-latest.osm.pbf",
+      "bbox": {
+        "oeste": 1.68626,
+        "sur": 42.32755,
+        "este": 4.84798,
+        "norte": 44.97821
+      }
+    },
+    {
+      "id": "limousin",
+      "nombre": "Limousin",
+      "nombre_es": "Limousin",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/limousin-latest.osm.pbf",
+      "bbox": {
+        "oeste": 0.6271,
+        "sur": 44.91842,
+        "este": 2.61384,
+        "norte": 46.45781
+      }
+    },
+    {
+      "id": "lorraine",
+      "nombre": "Lorraine",
+      "nombre_es": "Lorraine",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/lorraine-latest.osm.pbf",
+      "bbox": {
+        "oeste": 4.88602,
+        "sur": 47.81188,
+        "este": 7.64011,
+        "norte": 49.61946
+      }
+    },
+    {
+      "id": "martinique",
+      "nombre": "Martinique",
+      "nombre_es": "Martinique",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/martinique-latest.osm.pbf",
+      "bbox": {
+        "oeste": -61.63056,
+        "sur": 14.13392,
+        "este": -60.42755,
+        "norte": 15.15167
+      }
+    },
+    {
+      "id": "mayotte",
+      "nombre": "Mayotte",
+      "nombre_es": "Mayotte",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/mayotte-latest.osm.pbf",
+      "bbox": {
+        "oeste": 44.62646,
+        "sur": -13.47243,
+        "este": 45.6784,
+        "norte": -12.14406
+      }
+    },
+    {
+      "id": "midi-pyrenees",
+      "nombre": "Midi-Pyrenees",
+      "nombre_es": "Midi-Pyrenees",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/midi-pyrenees-latest.osm.pbf",
+      "bbox": {
+        "oeste": -0.32754,
+        "sur": 42.56793,
+        "este": 3.45326,
+        "norte": 45.04779
+      }
+    },
+    {
+      "id": "nord-pas-de-calais",
+      "nombre": "Nord-Pas-de-Calais",
+      "nombre_es": "Nord-Pas-de-Calais",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/nord-pas-de-calais-latest.osm.pbf",
+      "bbox": {
+        "oeste": 1.27831,
+        "sur": 49.96764,
+        "este": 4.23662,
+        "norte": 51.28121
+      }
+    },
+    {
+      "id": "pays-de-la-loire",
+      "nombre": "Pays de la Loire",
+      "nombre_es": "Pays de la Loire",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/pays-de-la-loire-latest.osm.pbf",
+      "bbox": {
+        "oeste": -2.67467,
+        "sur": 46.21875,
+        "este": 0.919,
+        "norte": 48.57002
+      }
+    },
+    {
+      "id": "picardie",
+      "nombre": "Picardie",
+      "nombre_es": "Picardie",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/picardie-latest.osm.pbf",
+      "bbox": {
+        "oeste": 1.36008,
+        "sur": 48.83599,
+        "este": 4.25674,
+        "norte": 50.37125
+      }
+    },
+    {
+      "id": "poitou-charentes",
+      "nombre": "Poitou-Charentes",
+      "nombre_es": "Poitou-Charentes",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/poitou-charentes-latest.osm.pbf",
+      "bbox": {
+        "oeste": -1.89857,
+        "sur": 45.0868,
+        "este": 1.21499,
+        "norte": 47.17837
+      }
+    },
+    {
+      "id": "provence-alpes-cote-d-azur",
+      "nombre": "Provence Alpes-Cote-d'Azur",
+      "nombre_es": "Provence Alpes-Cote-d'Azur",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/provence-alpes-cote-d-azur-latest.osm.pbf",
+      "bbox": {
+        "oeste": 4.14475,
+        "sur": 42.31539,
+        "este": 7.74853,
+        "norte": 45.12887
+      }
+    },
+    {
+      "id": "reunion",
+      "nombre": "Reunion",
+      "nombre_es": "Reunion",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/reunion-latest.osm.pbf",
+      "bbox": {
+        "oeste": 54.94688,
+        "sur": -21.72922,
+        "este": 56.11999,
+        "norte": -20.58589
+      }
+    },
+    {
+      "id": "rhone-alpes",
+      "nombre": "Rhone-Alpes",
+      "nombre_es": "Rhone-Alpes",
+      "padre": "france",
+      "url": "https://download.geofabrik.de/europe/france/rhone-alpes-latest.osm.pbf",
+      "bbox": {
+        "oeste": 3.68608,
+        "sur": 44.11274,
+        "este": 7.19206,
+        "norte": 46.52248
+      }
+    },
+    {
+      "id": "andalucia",
+      "nombre": "Andalucía",
+      "nombre_es": "Andalucía",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/andalucia-latest.osm.pbf",
+      "bbox": {
+        "oeste": -7.52466,
+        "sur": 35.70638,
+        "este": -1.3321,
+        "norte": 38.73347
+      }
+    },
+    {
+      "id": "aragon",
+      "nombre": "Aragón",
+      "nombre_es": "Aragón",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/aragon-latest.osm.pbf",
+      "bbox": {
+        "oeste": -2.17907,
+        "sur": 39.83833,
+        "este": 0.77256,
+        "norte": 42.92677
+      }
+    },
+    {
+      "id": "asturias",
+      "nombre": "Asturias",
+      "nombre_es": "Asturias",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/asturias-latest.osm.pbf",
+      "bbox": {
+        "oeste": -7.18858,
+        "sur": 42.87886,
+        "este": -4.39956,
+        "norte": 44.01101
+      }
+    },
+    {
+      "id": "cantabria",
+      "nombre": "Cantabria",
+      "nombre_es": "Cantabria",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/cantabria-latest.osm.pbf",
+      "bbox": {
+        "oeste": -4.86162,
+        "sur": 42.75458,
+        "este": -3.14498,
+        "norte": 43.86548
+      }
+    },
+    {
+      "id": "castilla-y-leon",
+      "nombre": "Castilla y León",
+      "nombre_es": "Castilla y León",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/castilla-y-leon-latest.osm.pbf",
+      "bbox": {
+        "oeste": -7.08052,
+        "sur": 40.08044,
+        "este": -1.76605,
+        "norte": 43.24095
+      }
+    },
+    {
+      "id": "castilla-la-mancha",
+      "nombre": "Castilla-La Mancha",
+      "nombre_es": "Castilla-La Mancha",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/castilla-la-mancha-latest.osm.pbf",
+      "bbox": {
+        "oeste": -5.41111,
+        "sur": 38.0201,
+        "este": -0.91255,
+        "norte": 41.33223
+      }
+    },
+    {
+      "id": "cataluna",
+      "nombre": "Cataluña",
+      "nombre_es": "Cataluña",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/cataluna-latest.osm.pbf",
+      "bbox": {
+        "oeste": 0.15638,
+        "sur": 40.21245,
+        "este": 4.17479,
+        "norte": 42.8632
+      }
+    },
+    {
+      "id": "ceuta",
+      "nombre": "Ceuta",
+      "nombre_es": "Ceuta",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/ceuta-latest.osm.pbf",
+      "bbox": {
+        "oeste": -5.39102,
+        "sur": 35.86702,
+        "este": -5.25662,
+        "norte": 35.95869
+      }
+    },
+    {
+      "id": "valencia",
+      "nombre": "Valencia",
+      "nombre_es": "Comunidad Valenciana",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/valencia-latest.osm.pbf",
+      "bbox": {
+        "oeste": -1.53165,
+        "sur": 37.84341,
+        "este": 1.6864,
+        "norte": 40.79328
+      }
+    },
+    {
+      "id": "extremadura",
+      "nombre": "Extremadura",
+      "nombre_es": "Extremadura",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/extremadura-latest.osm.pbf",
+      "bbox": {
+        "oeste": -7.54369,
+        "sur": 37.93851,
+        "este": -4.64241,
+        "norte": 40.48913
+      }
+    },
+    {
+      "id": "galicia",
+      "nombre": "Galicia",
+      "nombre_es": "Galicia",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/galicia-latest.osm.pbf",
+      "bbox": {
+        "oeste": -9.77901,
+        "sur": 41.80443,
+        "este": -6.72707,
+        "norte": 44.14855
+      }
+    },
+    {
+      "id": "islas-baleares",
+      "nombre": "Islas Baleares",
+      "nombre_es": "Islas Baleares",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/islas-baleares-latest.osm.pbf",
+      "bbox": {
+        "oeste": 0.61523,
+        "sur": 38.05675,
+        "este": 4.93835,
+        "norte": 40.7098
+      }
+    },
+    {
+      "id": "la-rioja",
+      "nombre": "La Rioja",
+      "nombre_es": "La Rioja",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/la-rioja-latest.osm.pbf",
+      "bbox": {
+        "oeste": -3.1402,
+        "sur": 41.91403,
+        "este": -1.67301,
+        "norte": 42.64621
+      }
+    },
+    {
+      "id": "madrid",
+      "nombre": "Madrid",
+      "nombre_es": "Madrid",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/madrid-latest.osm.pbf",
+      "bbox": {
+        "oeste": -4.58954,
+        "sur": 39.88116,
+        "este": -3.05042,
+        "norte": 41.16864
+      }
+    },
+    {
+      "id": "melilla",
+      "nombre": "Melilla",
+      "nombre_es": "Melilla",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/melilla-latest.osm.pbf",
+      "bbox": {
+        "oeste": -2.97242,
+        "sur": 35.26393,
+        "este": -2.9082,
+        "norte": 35.32393
+      }
+    },
+    {
+      "id": "murcia",
+      "nombre": "Murcia",
+      "nombre_es": "Murcia",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/murcia-latest.osm.pbf",
+      "bbox": {
+        "oeste": -2.35125,
+        "sur": 37.11215,
+        "este": -0.24719,
+        "norte": 38.76024
+      }
+    },
+    {
+      "id": "navarra",
+      "nombre": "Navarra",
+      "nombre_es": "Navarra",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/navarra-latest.osm.pbf",
+      "bbox": {
+        "oeste": -2.50231,
+        "sur": 41.90611,
+        "este": -0.71652,
+        "norte": 43.31655
+      }
+    },
+    {
+      "id": "pais-vasco",
+      "nombre": "País Vasco",
+      "nombre_es": "País Vasco",
+      "padre": "spain",
+      "url": "https://download.geofabrik.de/europe/spain/pais-vasco-latest.osm.pbf",
+      "bbox": {
+        "oeste": -3.45434,
+        "sur": 42.46919,
+        "este": -1.66628,
+        "norte": 43.74729
+      }
+    }
+  ]
+}

@@ -12,6 +12,10 @@ dem/
 salida/
 logs/
 
+# Backups temporales del estilo (los crea crear_mapa.sh al aplicar estilo por zona)
+style/rando.txt.bak
+style/rando.txt.orig
+
 # Caché de Python
 __pycache__/
 *.pyc

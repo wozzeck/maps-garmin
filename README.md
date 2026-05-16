@@ -1,294 +1,257 @@
-# Creación de un mapa Garmin personalizado
+# maps-garmin — Generador de mapas Garmin de senderismo
 
-> Fork traducido al español por VVOSCA. Incluye pipeline custom para mapa de Pirineos.
-> Proyecto original (francés): https://gitlab.com/ravenfeld/garmincustommap
+Herramienta de línea de comandos para generar mapas Garmin (.img) optimizados
+para senderismo a partir de datos OpenStreetMap y modelos de elevación digital.
+Sirve para cualquier zona geográfica: basta con definir un archivo de
+configuración de zona.
 
-## Entorno
-Mis scripts se utilizan principalmente en MacOsX y se han probado en Ubuntu.
+Repositorio: https://github.com/wozzeck/maps-garmin (rama `main`)
 
-Para descargar las herramientas y comandos necesarios:
+Origen: fork reescrito en español de
+https://gitlab.com/ravenfeld/garmincustommap (Alexis Lecanu). Generalizado para
+cualquier zona; el original estaba orientado a un único mapa de Francia.
+
+
+## Qué hace exactamente
+
+1. Descarga extractos OSM regionales de Geofabrik en formato .pbf.
+2. Los recorta al polígono o bounding box de la zona con osmium.
+3. Si hay varios extractos (zona fronteriza), los fusiona en un único .pbf.
+4. Aplica opcionalmente el estilo de color personalizado por zona.
+5. Fragmenta el .pbf en tiles con splitter.
+6. Compila los tiles en capas .img con mkgmap, aplicando el estilo rando.
+7. Si existen curvas de nivel (.osm.gz), las integra en una capa independiente.
+8. Ensambla todo en un único gmapsupp.img y lo deposita en `salida/`.
+
+El archivo resultante se copia directamente a la carpeta `Garmin/` del
+dispositivo GPS.
+
+
+## Requisitos del sistema
+
+| Componente | Version / notas |
+|---|---|
+| Java (JRE) | 11 o superior; recomendado OpenJDK 21 |
+| curl | para descargar extractos OSM y herramientas |
+| osmium-tool | `sudo apt install osmium-tool` |
+| unzip | para descomprimir mkgmap y splitter |
+| Python 3.8+ | para los scripts de estilo y utilidades |
+| pyhgtmap | solo si quieres curvas de nivel (ver abajo) |
+| RAM | minimo 4 GB libres para zonas pequenas; 8-12 GB para zonas grandes |
+| Disco | variable; un build de Pirineos ocupa ~5 GB de temporales |
+
+Las herramientas Java (mkgmap, splitter) y el archivo sea.zip las descarga
+automáticamente `download_require.sh`.
+
+
+## Instalación
+
 ```bash
-bash download_require.sh
-```
-> En Mac OS X es necesario instalar los comandos con tu herramienta preferida. Necesitas ``curl``, ``python3``, ``java``, ``unzip``. Yo utilizo Homebrew.
-
-## Modelo de elevación digital (dem)
-Si deseas tener curvas de nivel, necesitarás archivos hgt. Para Europa recomiendo los archivos de sonny en arc 1° y para el resto del mundo los de la NASA (https://search.earthdata.nasa.gov/search).
-
-Los scripts utilizan por defecto los archivos de la NASA. Para ello necesitas crear un archivo ``password.txt`` con el siguiente contenido:
-```txt
-machine urs.earthdata.nasa.gov login MI_USUARIO password MI_CONTRASEÑA
-```
-- MI_USUARIO: tu nombre de usuario en (https://search.earthdata.nasa.gov/search)
-- MI_CONTRASEÑA: tu contraseña en (https://search.earthdata.nasa.gov/search)
-
-Si prefieres utilizar tus propios archivos, colócalos en ``dem/NOMBRE_DE_LA_REGION``
-
-## Agregar una región
-```python
-python add_country.py NOMBRE_DE_LA_REGION TIPO URL_OSM_GEOFABRIK
-```
-- NOMBRE_DE_LA_REGION: Nombre del mapa en el reloj y también para los directorios.
-- TIPO: rando o route. El estilo rando es el que comparto en el sitio, pero existe otro estilo para ciclismo en ruta.
-- URL_OSM_GEOFABRIK: URL del archivo de tu región en http://download.geofabrik.de
-
-Ejemplo para agregar Francia con tipo rando:
-```python
-python add_country.py Francia rando http://download.geofabrik.de/europe/france-latest.osm.pbf
-```
-
-Este comando permite descargar la región, obtener los archivos hgt o utilizar los que ya tengas, y generar el archivo que se depositará en ``~/Documents/Mega/Open_Garmin_Map/``. El script está adaptado para mi uso personal, así que puede que haya rutas que me sean útiles. Puedes modificar el archivo ``create_map.sh`` según tus necesidades.
-
-## Actualizar mis mapas
-Es muy simple. Un archivo ``country.txt`` se crea cuando utilizas el script ``add_country.py``, permitiendo mantener tus regiones con los parámetros utilizados. Esto permite ejecutar:
-
-```python
-python update_all.py
-```
-Este comando descarga el archivo osm de geofabrik y también los archivos hgt. Sin embargo, los archivos hgt rara vez se actualizan, por eso existe este comando:
-
-```python
-python update_only_osm.py
-```
-Este comando solo descarga los archivos osm de geofabrik y reutiliza los archivos hgt que ya tienes.
-
-## Posibles problemas al usar los scripts
- - Tengo una máquina con 64 GB de RAM, así que utilizo 32 GB de RAM en los comandos Java. Para modificar esto, busca en los scripts ``java -Xmx32768m`` y reemplázalo con el valor de RAM que desees.
-
-## Detalles de los scripts
-Si lo necesitas, puedes ejecutar los diferentes scripts manualmente uno por uno. No recomiendo este método, pero si hay errores permite relanzar solo los que fallen.
-
-#### `download_require.sh`
-El script `download_require.sh` descarga los programas splitter y mkgmap, así como en Linux los comandos necesarios para el correcto funcionamiento de los scripts. También ejecuta el comando `pip install -r requirements.txt` para descargar las librerías de Python.
-> Atención: es posible que las versiones de mkgmap y/o splitter deban actualizarse para su descarga.
-```bash
+git clone https://github.com/wozzeck/maps-garmin.git
+cd maps-garmin
 bash download_require.sh
 ```
 
-#### `get_contours.py`
-El script `get_contours.py` permite descargar los archivos hgt del sitio https://urs.earthdata.nasa.gov/ y convertirlos al formato osm para ser utilizados por otros scripts.
-```python
-python get_contours.py NOMBRE_DE_LA_REGION URL_OSM_GEOFABRIK
-```
-- NOMBRE_DE_LA_REGION: Nombre del mapa en el reloj y también para los directorios.
-- URL_OSM_GEOFABRIK: URL del archivo de tu región en http://download.geofabrik.de
+`download_require.sh` descarga `mkgmap-r4924`, `splitter-r654` y `sea.zip` al
+directorio raíz del repo. Si falta alguna dependencia del sistema (curl, java,
+unzip), lo indica y sale sin ejecutar `apt`.
 
-Para nuestro ejemplo:
-```bash
-python get_contours.py Francia http://download.geofabrik.de/europe/france-latest.osm.pbf
-```
-
-#### `update_map.sh`
-El script `update_map.sh` permite descargar el archivo osm y ejecutar el script `create_map.sh`.
-
-Este script asume que el directorio carte_NOMBRE_DE_LA_REGION existe. En nuestro ejemplo: carte_france
+Para instalar pyhgtmap (necesario solo para curvas de nivel):
 
 ```bash
-bash update_map.sh NOMBRE_DE_LA_REGION ID TIPO URL_OSM_GEOFABRIK
-```
-- NOMBRE_DE_LA_REGION: Nombre del mapa en el reloj y también para los directorios.
-- ID: Identificador del mapa en el reloj. Debe ser único entre todos los mapas, de lo contrario podrías tener mapas no disponibles en el reloj. Como no conozco los identificadores de otros mapas, es posible que tengas que modificarlo si usas el mismo que un mapa que ya tienes en tu reloj.
-- TIPO: rando o route. El estilo rando es el que comparto en el sitio, pero existe otro estilo para ciclismo en ruta.
-- URL_OSM_GEOFABRIK: URL del archivo de tu región en http://download.geofabrik.de
-
-Para nuestro ejemplo:
-```bash
-bash update_map.sh Francia 00 rando http://download.geofabrik.de/europe/france-latest.osm.pbf
+pip install --user --break-system-packages pyhgtmap
 ```
 
-#### `create_map.sh`
-El script `create_map.sh` permite crear un archivo para tu dispositivo Garmin.
+En Ubuntu 24.04 el flag `--break-system-packages` es obligatorio por PEP 668.
 
-Este script asume que el directorio carte_NOMBRE_DE_LA_REGION existe. En nuestro ejemplo: carte_france
 
-Según tus necesidades, si deseas curvas de nivel, los archivos osm de las curvas deben estar presentes en el directorio carte_NOMBRE_DE_LA_REGION. Si no están presentes, la generación se realizará sin integrar las curvas.
+## Uso rápido
+
+### 1. Definir la zona
+
+Copia la plantilla y edítala:
 
 ```bash
-bash create_map.sh NOMBRE_DE_LA_REGION ID TIPO
-```
-- NOMBRE_DE_LA_REGION: Nombre del mapa en el reloj y también para los directorios.
-- ID: Identificador del mapa en el reloj. Debe ser único entre todos los mapas, de lo contrario podrías tener mapas no disponibles en el reloj. Como no conozco los identificadores de otros mapas, es posible que tengas que modificarlo si usas el mismo que un mapa que ya tienes en tu reloj.
-- TIPO: rando o route. El estilo rando es el que comparto en el sitio, pero existe otro estilo para ciclismo en ruta.
-
-Para nuestro ejemplo:
-```bash
-bash create_map.sh Francia 00 rando
-```
-> Atención: al final del script mueve el archivo generado a ~/Documents/Mega/Open_Garmin_Map/. Esto es útil para mí pero quizá no para ti. Modifícalo según tus necesidades si es preciso.
-
-> La RAM disponible para Java está establecida en 32768m (32 GB). Según tu máquina, modifica este valor.
-
-## Si deseas personalizar el mapa
-
-Documentación del estilo:
-
-https://www.mkgmap.org.uk/doc/pdf/style-manual.pdf
-
-TYPViewer para editar el archivo TYP:
-
-https://sites.google.com/site/sherco40/
-
-## Para ir más allá
-Como gestiono varias regiones, he realizado scripts ya que no me sé los comandos de memoria.
-
-En las líneas que siguen explico el proceso para un mapa de Francia.
-
-## Descarga de herramientas
-```bash
-bash download_require.sh
+cp zonas/template.conf zonas/mi_zona.conf
 ```
 
-## Descarga de archivos para las curvas de nivel
-
-https://search.earthdata.nasa.gov/search
-
-Obtendrás los archivos en formato tif. Necesitarás convertirlo a hgt y luego a OSM:
-```
-gdal_translate -of SRTMHGT mi_archivo.tif mi_archivo.hgt
-```
-Alternativamente, para Europa existe este sitio que permite descargar los archivos en formato hgt directamente:
-
-http://viewfinderpanoramas.org/dem1d.html
-
-o
-
-https://sonny.4lima.de/
-
-El enlace para Francia está aquí:
-
-https://drive.google.com/drive/folders/1MQqQe3VeFuUM9hRlXIz-uM0wvBNXBM2U
-
-Para convertir del formato hgt al formato OSM usaremos la herramienta hgt2osm que puedes descargar aquí:
-https://github.com/FSofTlpz/Hgt2Osm2/tree/master/bin
-
-El comando es el siguiente:
-```
-hgt2osm.exe --HgtPath=. --WriteElevationType=false --FakeDistance=-0.5 --MinVerticePoints=3 --MinBoundingbox=0.00016 --DouglasPeucker=0.05 --MinorDistance=10 --OutputOverwrite=true
-```
-
-Ahora que las curvas están en formato OSM recomiendo guardarlas ya que este paso rara vez se repite debido a que los archivos de curvas casi nunca cambian.
-
-## Descarga del mapa
-En el sitio http://download.geofabrik.de/ puedes obtener la región que desees.
-
-Para Francia el enlace es: http://download.geofabrik.de/europe/france-latest.osm.pbf
-
-## Fragmentar los archivos
-Usaremos la aplicación splitter.
-
-Para las curvas, como están en formato OSM, puedes ejecutar el siguiente comando:
+Los campos obligatorios son:
 
 ```bash
-java -Xmx32768m -jar splitter.jar --mapid=73240100 --max-nodes=1600000 --keep-complete=false *.OSM
-
-mv template.args courbes.args
-```
-
-Para fragmentar el archivo de Francia puedes ejecutar el siguiente comando:
-
-```bash
-java -Xmx32768m -jar splitter.jar --mapid=63240101 --max-nodes=1000000 --keep-complete=true --route-rel-values=foot,hiking --overlap=0 france-latest.osm.pbf
-
-mv template.args france-latest.args
-```
-
-## Generar el archivo IMG para tu reloj
-Debes obtener el directorio style que se encuentra en este repositorio. Contiene el archivo TYP y los estilos para mkgmap.
-
-```bash
-java -Xmx32768m -jar ../mkgmap-r4802/mkgmap.jar --road-name-pois --add-pois-to-areas --add-pois-to-lines --remove-short-arcs --precomp-sea=../sea.zip --x-check-precomp-sea=0  --style-file=../style/rando ../style/rando.TYP --family-name="Test" --description="Test" --mapname=94240105 --family-id=1 --product-id=1 --latin1 --net --route --road-name-pois --gmapsupp -c france-latest.args -c courbes.args
-```
-
-Solo te queda copiar el archivo gmapsupp.img en tu dispositivo Garmin.
-
-> Atención: es posible que ya exista un archivo con este nombre. Si es así, renombra tu archivo de otra manera, no tiene importancia.
-
-## Caso especial: Mapa de Pirineos
-
-Este fork incluye soporte para generar un mapa combinado de los Pirineos (España + Andorra + Francia, desde el Atlántico hasta el Mediterráneo, cubriendo toda la provincia de Huesca al sur y hasta Toulouse al norte).
-
-A diferencia de los mapas regionales estándar, los Pirineos no son una región oficial de Geofabrik, por lo que se combinan varios extractos regionales (Aragón, Cataluña, Navarra, País Vasco, Aquitaine, Midi-Pyrénées, Languedoc-Roussillon, Andorra) y se recortan al polígono `zonas/pirineos.poly`.
-
-**Uso:**
-```bash
-bash crear_mapa.sh pirineos
-```
-
-Opcionalmente, para incluir curvas de nivel (requiere credenciales NASA EarthData en `password.txt`):
-```bash
-bash descargar_hgt.sh pirineos
-bash crear_mapa.sh pirineos
-```
-
-Requiere `osmium-tool` instalado (`sudo apt install osmium-tool`).
-
-El resultado se deposita en `salida/MapRando_Pirineos_FECHA.img`, listo para copiar a la carpeta `Garmin/` de tu dispositivo.
-
-## Cómo añadir una nueva zona
-
-Crea un archivo `zonas/<nombre>.conf` con la configuración de la zona. El nombre debe ser en minúsculas y sin espacios (se usará como identificador de directorios y archivos).
-
-**Formato del archivo .conf:**
-
-```bash
-# Nombre legible que aparecerá en el dispositivo Garmin
-NOMBRE_MAPA="Mi Zona"
-
-# Bounding box
-BBOX_SUR=40.0
-BBOX_NORTE=42.5
-BBOX_OESTE=-2.0
-BBOX_ESTE=1.0
-
-# Polígono para recorte fino (ruta relativa al repo).
-# Si está vacío (""), se genera automáticamente un rectángulo desde el bbox.
-POLIGONO=""
-
-# URLs de Geofabrik (una o más)
+NOMBRE_MAPA="Mi Zona"          # aparece en el dispositivo Garmin
+BBOX_SUR=41.0                  # latitud sur (grados decimales)
+BBOX_NORTE=43.0                # latitud norte
+BBOX_OESTE=-2.0                # longitud oeste (negativo al oeste de Greenwich)
+BBOX_ESTE=1.5                  # longitud este
 FUENTES_OSM=(
     "http://download.geofabrik.de/europe/spain/aragon-latest.osm.pbf"
 )
-
-# ID base de 3 dígitos para mkgmap. DEBE ser único entre todas las zonas.
-MAPID_BASE="891"
-
-# Memoria RAM para Java
-RAM_JAVA="4096m"
+MAPID_BASE="500"               # 3 digitos, unico por zona (889=Pirineos, 890=Mallorca)
+RAM_JAVA="4096m"               # memoria maxima para Java
 ```
 
-**Ejemplo completo — añadir mapa de los Pirineos Aragoneses:**
+Para definir el bounding box visualmente:
+https://boundingbox.klokantech.com/
 
-1. Crea `zonas/pirineo_aragones.conf`:
+Para zonas que cruzan varios extractos regionales (por ejemplo una zona
+fronteriza entre España y Francia), añade todas las URLs necesarias en
+`FUENTES_OSM`. El script las recorta al polígono y las fusiona automáticamente.
+
+El campo `POLIGONO` es opcional: si se omite o queda vacío, se usa el bounding
+box rectangular. Si se especifica, debe ser un archivo .poly (formato osmosis)
+con ruta relativa al raíz del repo.
+
+### 2. Descargar curvas de nivel (opcional)
 
 ```bash
-NOMBRE_MAPA="Pirineo Aragones"
-BBOX_SUR=42.0
-BBOX_NORTE=43.0
-BBOX_OESTE=-1.0
-BBOX_ESTE=1.0
-POLIGONO=""
-FUENTES_OSM=(
-    "http://download.geofabrik.de/europe/spain/aragon-latest.osm.pbf"
-)
-MAPID_BASE="891"
-RAM_JAVA="4096m"
+bash descargar_hgt.sh mi_zona
 ```
 
-2. Opcionalmente descarga curvas de nivel:
+Usa pyhgtmap con multiples fuentes de elevación (Sonny, Viewfinder, ALOS,
+SRTM) en orden de calidad. Los tiles HGT se cachean en `dem/mi_zona/cache/`
+para no repetir la descarga en builds sucesivos. Las curvas se generan a
+intervalos de 10 m. Sin este paso, el mapa se genera sin relieve.
+
+### 3. Generar el mapa
+
 ```bash
-bash descargar_hgt.sh pirineo_aragones
+bash crear_mapa.sh mi_zona
 ```
 
-3. Genera el mapa:
+El proceso completo tarda entre 5 y 30 minutos dependiendo del tamaño de la
+zona y la RAM disponible. Al terminar, el archivo se encuentra en:
+
+```
+salida/MapRando_Mi_Zona_AAAA_MM_DD.img
+```
+
+### 4. Copiar al dispositivo Garmin
+
+Conecta el GPS por USB y copia el .img a la carpeta `Garmin/` de la tarjeta
+de memoria. Si ya existe un `gmapsupp.img`, renombra el nuevo archivo antes
+de copiarlo (el nombre no importa para el dispositivo, solo la extension .img).
+
+
+## El editor web
+
+El directorio `editor/` contiene una aplicación web de una sola página que
+permite:
+
+- Dibujar el polígono de la zona sobre un mapa interactivo (Leaflet).
+- Seleccionar los extractos de Geofabrik que la cubren.
+- Ajustar parámetros (RAM, MAPID_BASE, fuentes HGT).
+- Descargar el archivo `zonas/mi_zona.conf` generado.
+- Editar los colores de senderos y exportar `zonas/mi_zona.estilo.json`.
+
+Para arrancarlo, solo hace falta un servidor HTTP local (no requiere Node ni
+ninguna dependencia):
+
 ```bash
-bash crear_mapa.sh pirineo_aragones
+cd /ruta/al/repo
+python3 -m http.server 8080
 ```
 
-4. El resultado aparece en `salida/MapRando_Pirineo_Aragones_FECHA.img`.
+Abre en el navegador: http://localhost:8080/editor/
 
-**Notas importantes:**
-- Cada zona debe tener un `MAPID_BASE` diferente para evitar conflictos de IDs en el Garmin.
-- Si defines `POLIGONO`, la ruta debe ser relativa al directorio raíz del repo y el archivo debe existir.
-- Para zonas con varias fuentes OSM solapadas (como Pirineos), el script las recorta al polígono en paralelo y las fusiona con `osmium merge`.
-- Los rangos actuales en uso: `889` (Pirineos), `890` (Mallorca). Usa `891` en adelante para nuevas zonas.
+El editor necesita los archivos `datos/extractos_geofabrik.json` y
+`datos/estilo_actual.json`, que ya están incluidos en el repositorio.
+Si quieres regenerarlos:
 
+```bash
+python3 generar_extractos.py          # actualiza extractos_geofabrik.json
+python3 estilo_a_json.py              # actualiza estilo_actual.json
+```
+
+
+## Personalización del estilo de líneas
+
+El estilo visual del mapa se define en `style/rando.txt`, un archivo TYP de
+Garmin en codificación CP1252 con saltos de línea CRLF. No debe editarse
+directamente con editores que normalicen saltos de línea.
+
+El flujo de personalización es:
+
+```
+style/rando.txt
+    |
+    v  estilo_a_json.py
+datos/estilo_actual.json
+    |
+    v  editor web (pestaña Estilo)
+zonas/mi_zona.estilo.json
+    |
+    v  aplicar_estilo.py (lo invoca crear_mapa.sh automáticamente)
+style/rando.txt  (modificado temporalmente durante el build)
+```
+
+`crear_mapa.sh` detecta si existe `zonas/mi_zona.estilo.json` y aplica los
+cambios de color antes de compilar. Al terminar (o si el build falla),
+restaura `style/rando.txt` al estado original mediante un trap EXIT.
+
+Para comprobar qué cambiaría sin tocar ningún archivo:
+
+```bash
+python3 aplicar_estilo.py mi_zona --check
+```
+
+El catálogo visual de todos los tipos de línea del estilo está en
+`tipos_de_linea.html`. Se puede abrir directamente en el navegador. Para
+regenerarlo desde el TYP actual:
+
+```bash
+python3 gen_tipos_linea.py
+```
+
+
+## Estructura del repositorio
+
+| Archivo | Descripcion |
+|---|---|
+| `crear_mapa.sh` | Pipeline principal. Orquesta los pasos 1-7 descritos arriba. Punto de entrada habitual. |
+| `construir.sh` | Compilacion (splitter + mkgmap). Lo invoca `crear_mapa.sh`; tambien puede ejecutarse suelto si los .pbf ya existen. |
+| `descargar_hgt.sh` | Descarga datos de elevacion y genera curvas de nivel (.osm.gz) con pyhgtmap. |
+| `download_require.sh` | Descarga mkgmap, splitter y sea.zip. Comprueba dependencias del sistema. |
+| `aplicar_estilo.py` | Lee `zonas/<zona>.estilo.json` y sobreescribe los colores en `style/rando.txt` (CP1252, CRLF). Soporta `--check` (dry-run). |
+| `estilo_a_json.py` | Exporta el estado actual de `style/rando.txt` a `datos/estilo_actual.json` para el editor web. |
+| `gen_tipos_linea.py` | Genera `tipos_de_linea.html`, catálogo visual de todos los tipos de linea del TYP con previsualizacion SVG real. |
+| `generar_extractos.py` | Descarga el índice de Geofabrik y genera `datos/extractos_geofabrik.json` para el editor web. |
+| `traducir_typ.py` | Utilidad de traduccion de tipos TYP (uso interno). |
+| `zonas/` | Configuraciones de zona. `template.conf` es la plantilla. `pirineos.conf` y `mallorca.conf` son ejemplos. |
+| `style/` | TYP Garmin (`rando.txt`) y reglas mkgmap (`rando/lines`, etc.). |
+| `editor/` | Aplicacion web: `index.html`, `app.js`, `style.css`. Requiere servidor HTTP local. |
+| `datos/` | JSON generados (estilo_actual.json, extractos_geofabrik.json). Incluidos en el repo. |
+| `options_rando.args` | Opciones fijas de mkgmap para la capa OSM principal. |
+| `options_courbes.args` | Opciones fijas de mkgmap para la capa de curvas de nivel. |
+| `tipos_de_linea.html` | Catalogo visual generado. Abrir en el navegador para consultar el estilo. |
+
+
+## Directorios generados (excluidos del repo)
+
+| Directorio | Contenido |
+|---|---|
+| `carte_<zona>/` | Directorio de trabajo por zona: .pbf descargados, recortados, tiles intermedios. |
+| `dem/<zona>/` | Tiles HGT cacheados y archivos .osm.gz de curvas de nivel. |
+| `salida/` | Archivos .img finales listos para copiar al Garmin. |
+| `mkgmap/` | Herramienta mkgmap descargada por `download_require.sh`. |
+| `splitter/` | Herramienta splitter descargada por `download_require.sh`. |
+
+
+## Ejemplos de zonas incluidas
+
+| Zona | Descripcion | Fuentes OSM |
+|---|---|---|
+| `pirineos` | Pirineos completos (España, Francia, Andorra). Usa polígono fino `zonas/pirineos.poly`. | 8 extractos regionales |
+| `mallorca` | Isla de Mallorca. Ejemplo de zona pequena con una sola fuente. | 1 extracto (Islas Baleares) |
+
+Usa `mallorca` como referencia para builds de prueba: es pequeña, tarda
+aproximadamente 3-5 minutos y consume poca RAM.
+
+
+## Creditos
+
+Proyecto original: **garmincustommap** de Alexis Lecanu
+(https://gitlab.com/ravenfeld/garmincustommap), publicado bajo licencia libre.
+
+Este fork ha sido reescrito en español, generalizado para cualquier zona
+geográfica y ampliado con el editor web y las herramientas de personalización
+del estilo.

@@ -1,0 +1,793 @@
+/* =====================================================
+   Garmin Map Editor - style.css
+   Sin framework. Modo claro/oscuro via prefers-color-scheme
+   ===================================================== */
+
+:root {
+  --bg: #f5f5f5;
+  --bg2: #ffffff;
+  --bg3: #e8e8e8;
+  --bg-preview: #e0e0e0;
+  --fg: #1a1a1a;
+  --fg2: #444444;
+  --fg3: #888888;
+  --border: #cccccc;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-fg: #ffffff;
+  --warn: #dc2626;
+  --warn-bg: #fef2f2;
+  --ok: #16a34a;
+  --ok-bg: #f0fdf4;
+  --highlight-border: #2563eb;
+  --section-head: #e8eef8;
+  --featured-bg: #fffbeb;
+  --featured-border: #f59e0b;
+  --tab-active: #2563eb;
+  --tab-active-fg: #ffffff;
+  --tab-inactive: #e2e8f0;
+  --tab-inactive-fg: #444444;
+  --input-bg: #ffffff;
+  --input-border: #cccccc;
+  --input-focus: #2563eb;
+  --shadow: rgba(0,0,0,0.08);
+  --select-bg: #2563eb22;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111827;
+    --bg2: #1f2937;
+    --bg3: #374151;
+    --bg-preview: #374151;
+    --fg: #f3f4f6;
+    --fg2: #d1d5db;
+    --fg3: #9ca3af;
+    --border: #374151;
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --accent-fg: #ffffff;
+    --warn: #f87171;
+    --warn-bg: #450a0a;
+    --ok: #4ade80;
+    --ok-bg: #052e16;
+    --highlight-border: #3b82f6;
+    --section-head: #1e3a5f;
+    --featured-bg: #2d2000;
+    --featured-border: #d97706;
+    --tab-active: #3b82f6;
+    --tab-active-fg: #ffffff;
+    --tab-inactive: #374151;
+    --tab-inactive-fg: #d1d5db;
+    --input-bg: #1f2937;
+    --input-border: #4b5563;
+    --input-focus: #3b82f6;
+    --shadow: rgba(0,0,0,0.4);
+    --select-bg: #3b82f633;
+  }
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+/* ---- Layout principal ---- */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 1px 4px var(--shadow);
+  flex-shrink: 0;
+}
+
+header h1 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+header .subtitle {
+  color: var(--fg3);
+  font-size: 0.8rem;
+}
+
+/* ---- Tabs ---- */
+nav.tabs {
+  display: flex;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  padding: 0 16px;
+  gap: 4px;
+}
+
+nav.tabs button {
+  padding: 9px 20px;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--tab-inactive);
+  color: var(--tab-inactive-fg);
+  transition: background 0.15s, color 0.15s;
+  margin-bottom: -1px;
+  border: 1px solid transparent;
+}
+
+nav.tabs button:hover {
+  background: var(--bg3);
+}
+
+nav.tabs button.active {
+  background: var(--tab-active);
+  color: var(--tab-active-fg);
+  border-color: var(--border);
+  border-bottom-color: var(--tab-active);
+}
+
+/* ---- Contenido de tabs ---- */
+.tab-content {
+  display: none;
+  flex: 1;
+  overflow: hidden;
+}
+
+.tab-content.active {
+  display: flex;
+}
+
+/* ---- Error global ---- */
+#error-global {
+  display: none;
+  background: var(--warn-bg);
+  color: var(--warn);
+  border: 1px solid var(--warn);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin: 16px;
+  font-weight: 600;
+}
+
+/* ===============================
+   PESTAÑA 1 - ZONA
+   =============================== */
+#tab-zona {
+  display: none;
+  overflow: hidden;
+}
+#tab-zona.active {
+  display: flex;
+}
+
+.zona-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  gap: 0;
+}
+
+#mapa-container {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.zona-panel {
+  width: 340px;
+  flex-shrink: 0;
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.zona-panel-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ---- Campos de zona ---- */
+.field-group {
+  background: var(--bg3);
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-group h3 {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fg3);
+  margin-bottom: 2px;
+}
+
+.field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.field-row label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--fg2);
+}
+
+.field-row input[type="text"],
+.field-row input[type="number"],
+.field-row select,
+.field-row textarea {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  padding: 5px 8px;
+  color: var(--fg);
+  font-size: 0.85rem;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.field-row input:focus,
+.field-row select:focus,
+.field-row textarea:focus {
+  outline: none;
+  border-color: var(--input-focus);
+}
+
+.field-row .hint {
+  font-size: 0.75rem;
+  color: var(--fg3);
+}
+
+.field-row .id-preview {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-family: monospace;
+}
+
+.warn-text {
+  color: var(--warn);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* ---- Bbox info ---- */
+.info-box {
+  background: var(--bg3);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 0.8rem;
+}
+
+.info-box h3 {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fg3);
+  margin-bottom: 6px;
+}
+
+.info-box .bbox-values {
+  font-family: monospace;
+  font-size: 0.78rem;
+  color: var(--fg2);
+  line-height: 1.8;
+}
+
+.info-box .count-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-radius: 10px;
+  padding: 1px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+/* ---- Filtro de extractos ---- */
+.extractos-filter {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.extractos-filter label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--fg2);
+  white-space: nowrap;
+}
+
+.extractos-filter select {
+  flex: 1;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  padding: 4px 6px;
+  color: var(--fg);
+  font-size: 0.82rem;
+}
+
+/* ---- Lista de extractos ---- */
+.extractos-lista {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg2);
+}
+
+.extracto-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.extracto-item:last-child {
+  border-bottom: none;
+}
+
+.extracto-item:hover {
+  background: var(--bg3);
+}
+
+.extracto-item.intersecta {
+  background: var(--select-bg);
+}
+
+.extracto-item input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.extracto-nombre {
+  font-size: 0.8rem;
+  flex: 1;
+}
+
+.extracto-padre {
+  font-size: 0.7rem;
+  color: var(--fg3);
+  background: var(--bg3);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+/* ===============================
+   PESTAÑA 2 - ESTILO
+   =============================== */
+#tab-estilo {
+  display: none;
+  overflow: hidden;
+}
+#tab-estilo.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.estilo-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.estilo-toolbar span {
+  font-size: 0.85rem;
+  color: var(--fg2);
+}
+
+.estilo-toolbar .cambios-badge {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-radius: 10px;
+  padding: 1px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.btn-secondary {
+  background: var(--bg3);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-secondary:hover {
+  background: var(--border);
+}
+
+.estilo-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ---- Secciones de estilo ---- */
+.seccion-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.seccion-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  background: var(--section-head);
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.seccion-header:hover {
+  filter: brightness(0.97);
+}
+
+.seccion-header h2 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.seccion-toggle {
+  font-size: 0.75rem;
+  color: var(--fg3);
+  transition: transform 0.2s;
+}
+
+.seccion-header.collapsed .seccion-toggle {
+  transform: rotate(-90deg);
+}
+
+.seccion-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.seccion-body.hidden {
+  display: none;
+}
+
+/* ---- Tipo de linea ---- */
+.tipo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+
+.tipo-row:last-child {
+  border-bottom: none;
+}
+
+.tipo-row.featured {
+  background: var(--featured-bg);
+  border-left: 3px solid var(--featured-border);
+}
+
+.tipo-row:hover {
+  background: var(--bg3);
+}
+
+.tipo-row.featured:hover {
+  filter: brightness(0.97);
+}
+
+.tipo-preview {
+  flex-shrink: 0;
+  width: 140px;
+  overflow: hidden;
+}
+
+.tipo-preview svg {
+  display: block;
+  border-radius: 3px;
+  max-width: 140px;
+}
+
+.tipo-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tipo-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tipo-hex {
+  font-size: 0.72rem;
+  font-family: monospace;
+  color: var(--fg3);
+}
+
+.tipo-colors {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.color-field {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.color-field label {
+  font-size: 0.75rem;
+  color: var(--fg2);
+  width: 55px;
+}
+
+.color-field input[type="color"] {
+  width: 32px;
+  height: 22px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 1px;
+  background: var(--input-bg);
+}
+
+.color-field input[type="color"]:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.color-field .no-color {
+  font-size: 0.7rem;
+  color: var(--fg3);
+  font-style: italic;
+}
+
+.tipo-acciones {
+  flex-shrink: 0;
+}
+
+.btn-reset {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 7px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  color: var(--fg3);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.btn-reset:hover {
+  background: var(--bg3);
+  color: var(--fg);
+}
+
+.tipo-row.modificado .tipo-name::after {
+  content: " *";
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ===============================
+   PESTAÑA 3 - GENERAR
+   =============================== */
+#tab-generar {
+  display: none;
+  overflow: hidden;
+}
+#tab-generar.active {
+  display: flex;
+  justify-content: center;
+}
+
+.generar-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resumen-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.resumen-card h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.resumen-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 14px;
+  font-size: 0.85rem;
+}
+
+.resumen-grid dt {
+  font-weight: 600;
+  color: var(--fg2);
+}
+
+.resumen-grid dd {
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.resumen-lista {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.resumen-item {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  background: var(--bg3);
+  border-radius: 4px;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+/* ---- Botón principal ---- */
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.instrucciones-card {
+  background: var(--ok-bg);
+  border: 1px solid var(--ok);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.instrucciones-card h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ok);
+  margin-bottom: 8px;
+}
+
+.instrucciones-card ol {
+  margin-left: 18px;
+  font-size: 0.85rem;
+  line-height: 2;
+}
+
+.instrucciones-card code {
+  font-family: monospace;
+  background: var(--bg3);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 0.82rem;
+}
+
+/* ---- Advertencias generales ---- */
+.alerta {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: var(--warn);
+  font-weight: 600;
+}
+
+/* ---- Scrollbars ---- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fg3);
+}
+
+/* ---- Leaflet overrides ---- */
+.leaflet-container {
+  background: var(--bg3) !important;
+  font-family: inherit;
+}
+
+/* Geoman toolbar */
+.leaflet-pm-toolbar .leaflet-pm-icon-polygon {
+  opacity: 1;
+}

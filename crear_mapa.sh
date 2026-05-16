@@ -310,7 +310,38 @@ echo ""
 echo "[7/7] Iniciando construcción del mapa (splitter + mkgmap)..."
 echo "  Script: construir.sh ${ZONA}"
 
+# --- Estilo personalizado por zona -------------------------------------------
+ESTILO_JSON="$REPO_DIR/zonas/${ZONA}.estilo.json"
+RANDO_PATH="$REPO_DIR/style/rando.txt"
+RANDO_ORIG="$REPO_DIR/style/rando.txt.orig"
+_estilo_aplicado=0
+
+_restaurar_rando() {
+    if [ "$_estilo_aplicado" -eq 1 ] && [ -f "$RANDO_ORIG" ]; then
+        cp "$RANDO_ORIG" "$RANDO_PATH"
+        echo "  Estilo base restaurado: style/rando.txt"
+    fi
+}
+
+if [ -f "$ESTILO_JSON" ]; then
+    echo "  Estilo personalizado encontrado: $ESTILO_JSON"
+    # Guardar copia limpia del estilo base (solo si no existe ya)
+    if [ ! -f "$RANDO_ORIG" ]; then
+        cp "$RANDO_PATH" "$RANDO_ORIG"
+        echo "  Copia limpia guardada: style/rando.txt.orig"
+    fi
+    # Asegurar restauración aunque construir.sh falle
+    trap '_restaurar_rando' EXIT
+    python3 "$REPO_DIR/aplicar_estilo.py" "$ZONA" \
+        || error "aplicar_estilo.py falló para la zona '${ZONA}'."
+    _estilo_aplicado=1
+fi
+# -----------------------------------------------------------------------------
+
 bash "$REPO_DIR/construir.sh" "$ZONA" || error "Falló construir.sh para la zona '${ZONA}'."
+
+# Restaurar rando.txt si se aplicó un estilo personalizado
+_restaurar_rando
 
 # -----------------------------------------------------------------------------
 # Resumen final
